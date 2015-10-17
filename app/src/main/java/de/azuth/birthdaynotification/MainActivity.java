@@ -2,16 +2,19 @@ package de.azuth.birthdaynotification;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-    //public static final String NOTIFICATION_PREFERENCES = "NotifyPreferences";
 
-    private AlarmSetActivity asa;
+    private SharedPreferences settings;
+    protected AlarmSetActivity asa;
 
     public void onClickToast(View view) {
         String string = "Toast Ready!";
@@ -23,29 +26,34 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences settings = getSharedPreferences("PREFS_SAVED_DATA", MODE_PRIVATE);
-        //settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //settings = getApplicationContext().getSharedPreferences("PREFS_SAVED_DATA", MODE_PRIVATE);
 
 
         if(!settings.contains("hour") || !settings.contains("minute")) {
-            settings.edit().putInt("hour", 20);
-            settings.edit().putInt("minute", 21);
+            settings.edit().putInt("hour", 18);
+            settings.edit().putInt("minute", 33);
             settings.edit().commit();
         }
+        Log.d("main", settings.toString());
+        //asa = new AlarmSetActivity(getApplicationContext());
+        //asa.setAlarm();
 
         TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setCurrentHour(settings.getInt("hour", 12));
         timePicker.setCurrentMinute(settings.getInt("minute", 0));
-        new AlarmSetActivity().setAlarm();
-
 
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                SharedPreferences settings = getSharedPreferences("PREFS_SAVED_DATA", MODE_PRIVATE);
-                settings.edit().putInt("hour", hourOfDay);
+            public void onTimeChanged(TimePicker view, int hour, int minute) {
+                settings.edit().putInt("hour", hour);
                 settings.edit().putInt("minute", minute);
                 settings.edit().commit();
-                new AlarmSetActivity().setAlarm();
+                //asa.setAlarm();
+
+                Intent intent = new Intent();
+                intent.setAction("de.azuth.birthdaynotification.notify");
+                sendBroadcast(intent);
+
             }
         });
     }

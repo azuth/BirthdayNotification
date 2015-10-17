@@ -18,12 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmSetActivity" />
 
         <service android:name=".NotifyService" />
 
         <receiver android:name=".AutoStartNotifyReceiver">
             <intent-filter>
+                <action android:name="de.azuth.birthdaynotification.notify" />
+
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
