@@ -21,7 +21,7 @@
 
         <service android:name=".NotifyService" />
 
-        <receiver android:name=".AutoStartNotifyReceiver">
+        <receiver android:name=".SetAlarmReceiver">
             <intent-filter>
                 <action android:name="de.azuth.birthdaynotification.notify" />
 
